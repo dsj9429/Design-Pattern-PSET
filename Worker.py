@@ -46,6 +46,8 @@ class Worker:
                 self.position = (row - 1, col - 1)
             else:
                 raise ValueError(f"Cannot move {direction}")
+            
+            self.board.update_worker_position(self.worker_id, self.position)
 
     def build(self, direction):
             """

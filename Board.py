@@ -41,6 +41,15 @@ class Board:
                 print("|", end="")
 
             print("\n" + "+--+--+--+--+--+")
+    
+    def update_worker_position(self, worker_id, new_position):
+        """
+        @brief Updates the position of the worker on the board
+        @param worker_id: ID of the worker to be updated
+        @param new_position: The new position/building of the worker
+        @return: None
+        """
+        self.worker_positions[worker_id] = new_position
             
 def main():  
     game_board = Board()
