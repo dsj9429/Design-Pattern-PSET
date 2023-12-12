@@ -11,51 +11,16 @@ class SantoriniCLI:
     """Driver class for a command-line interface to the Santorini application"""
 
     def __init__(self):
-        self.game = Santorini()
         self.play_again = True
 
-    # def display_prompt(self):
-    #     """Display the menu and respond to choices."""
-
-    #     while True:
-    #         # displays board
-    #         self.display_board()
-    #         colors = ["white, (AB)", "blue, (YZ)"]
-    #         turn = 1
-            
-    #         # while game is not over, print number of turns and player 
-    #         while self.game.check_win() == False: # need to write out check_win first
-    #             # if turn number is odd, start off with white
-    #             if turn % 2 == 1:
-    #                 print(f"Turn {turn}, {colors[0]}\n")
-    #             else: 
-    #                 print(f"Turn {turn}, {colors[1]}\n")
-    #         while True:        
-    #             try: 
-    #                 worker_selected = input("Select a worker to move\n")
-    #             except InvalidWorker:
-    #                 print("Not a valid worker")
-    #             except OpponentPiece: 
-    #                 print("That is not your worker")
-                
-    #         while True: 
-    #             try: 
-    #                 dir_move = input("Select a direction to move (n, ne, e, se, s, sw, w, nw)\n")
-    #             except InvalidDirError:
-    #                 print("Not a valid direction")
-    #             except MoveError as error: 
-    #                 print(f"Cannot move {error.direction}")
-                    
-    #         while True: 
-    #             try: 
-    #                 dir_build = input("Select a direction to build (n, ne, e, se, s, sw, w, nw)\n")
-    #             except InvalidDirError:
-    #                 print("Not a valid direction")
-    #             except BuildError as error:
-    #                 print(f"Cannot move {error.direction}")
-
     def run(self):
+        """
+        @brief Run the entire game by prompting the user for inputs.
+        @param None
+        @return None
+        """
         while self.play_again:
+            self.game = Santorini()
             self.game.turn = 1
 
             while True:
@@ -77,7 +42,7 @@ class SantoriniCLI:
 
                 # Check for a win
                 if self.game.check_win():
-                    self.print_board()
+                    self.game.board.display_board()
                     print(f"{self.game.curr_player} has won")
                     break
 
