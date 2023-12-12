@@ -1,41 +1,26 @@
 class Board:
-    def __init__(self):
+    def __init__(self, worker_positions):
         """
-        @brief Sets up the board with initial worker positions
+        @brief Sets up the board, sets initial worker positions, hold the amount
+               of building levels still available for each block
         @param None
         @return None
         """
         self.grid = [[0 for _ in range(5)] for _ in range(5)]
-        self.worker_positions = {'A': (3, 1), 'B': (1, 3),
-                                 'Y': (1, 1), 'Z': (3, 3)}
-
-    def move_worker(self, worker_id, new_row, new_col):
-        """
-        @brief Moves specified worker according to Santorini rules
-        @param worker_id representing the worker to be moved
-               new_row representing the row of the new position
-               new_col representing the column of the new position
-        @return None
-        """
-        self.worker_positions[worker_id] = (new_row, new_col)
+        self.worker_positions = worker_positions
+        self.dome_amt = 18
+        self.level1_amt = 22
+        self.level2_amt = 18
+        self.level3_amt = 14
 
     def get_building_level(self, row, col):
         """
         @brief Obtains the level of the given building
         @param row representing the row of position for the building
-               col representing the column of the position for the building
+        @param col representing the column of the position for the building
         @return The level of the building being checked
         """
         return self.grid[row][col]
-
-    def build(self, row, col):
-        """
-        @brief Adds a level to the building at the given position.
-        @param row representing row of the position to the building
-               col representing column of the position to the building
-        @return None
-        """
-        self.grid[row][col] += 1
 
     def display_board(self):
         """
@@ -56,3 +41,13 @@ class Board:
                 print("|", end="")
 
             print("\n" + "+--+--+--+--+--+")
+            
+def main():
+    # Create an instance of the Board class
+    game_board = Board()
+
+    # Display the initial state of the board
+    game_board.display_board()
+
+if __name__ == "__main__":
+    main()
