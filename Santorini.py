@@ -34,21 +34,35 @@ class Santorini:
         @brief: Checks to see if the the worker for curr players are in a
                 building with 3 levels.
         """
-        pass
+        for worker in self.curr_player.workers.values():
+            row, col = worker.position
+            if self.board.get_building_level(row, col) == 3:
+                return True
+        return False
     
-    def check_move(self):
+    def check_move(self, worker_id, direction):
         """
         @brief: Checks to see if the curr_Player is able to move to surrounding
                 buildings. 
         """
-        pass
+        curr_worker = self.curr_player.workers[worker_id]
+        try:
+            curr_worker.move(direction)
+            return True
+        except ValueError:
+            return False
     
-    def check_build(self):
+    def check_build(self, worker_id, direction):
         """
         @brief: Checks to see if the curr_Player is able to build in surrounding
                 buildings. 
         """
-        pass
+        curr_worker = self.curr_player.workers[worker_id]
+        try:
+            curr_worker.build(direction)
+            return True
+        except ValueError:
+            return False
 
 def main():
     game = Santorini()
