@@ -42,11 +42,8 @@ class Board:
 
             print("\n" + "+--+--+--+--+--+")
             
-def main():
-    # Create an instance of the Board class
+def main():  
     game_board = Board()
-
-    # Display the initial state of the board
     game_board.display_board()
 
 if __name__ == "__main__":

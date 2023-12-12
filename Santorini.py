@@ -52,8 +52,6 @@ class Santorini:
 
 def main():
     game = Santorini()
-
-    # Display the initial state of the board
     game.board.display_board()
 
 if __name__ == "__main__":

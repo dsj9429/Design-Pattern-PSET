@@ -31,7 +31,7 @@ class SantoriniCLI:
             turn = 1
             
             # while game is not over, print number of turns and player 
-            while check_win() == False: # need to write out check_win first
+            while self.game.check_win() == False: # need to write out check_win first
                 # if turn number is odd, start off with white
                 if turn % 2 == 1:
                     print(f"Turn {turn}, {colors[0]}\n")
