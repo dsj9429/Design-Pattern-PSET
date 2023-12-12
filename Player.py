@@ -5,25 +5,38 @@ class Player:
         """
         @brief Makes a player with given ID
         @param player_id: ID for the given player.
-        @param workers: A dictionary containing player's workers their positions
+        @param workers: A dictionary containing player's workers and positions
         @return: None
         """
         self.player_id = player_id
         self.workers = workers
+        self.turn_stack = []
+        self.redo_stack = []
 
-    def undo:
+    def save_state(self):
+        """
+        @brief Saves the current state to the turn stack.
+        @return: None
+        """
+        self.turn_stack.append(self.workers.copy())
+    
+    def undo(self):
         """
         @brief Undo a turn and returns state to the last round.
         @return: None
         """
-        pass
-    
-    def redo:
+        if len(self.turn_stack) > 1:
+            self.redo_stack.append(self.turn_stack.pop())
+            self.workers = self.turn_stack[-1]
+
+    def redo(self):
         """
         @brief Redo a turn and changes state to the next round.
         @return: None
         """
-        pass
+        if self.redo_stack:
+            self.turn_stack.append(self.redo_stack.pop())
+            self.workers = self.turn_stack[-1]
 
 class HumanPlayer(Player):
     def make_move(self, worker_id, move_direction, build_direction):
@@ -34,7 +47,7 @@ class HumanPlayer(Player):
         @param build_direction: Direction to build a level
         @return: None
         """
-        pass
+        self.save_state()
 
 class HeuristicPlayer(Player):
     def make_move(self):
@@ -42,7 +55,7 @@ class HeuristicPlayer(Player):
         @brief Implements the heuristic player
         @return: None
         """
-        pass
+        self.save_state()
 
 class RandomPlayer(Player):
     def make_move(self):
@@ -50,4 +63,4 @@ class RandomPlayer(Player):
         @brief Implements the Random moves player
         @return: None
         """
-        pass
+        self.save_state()

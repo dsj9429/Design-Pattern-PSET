@@ -11,14 +11,14 @@ class Santorini:
 
         self.board = Board(initial_positions)
         
-        self.player_white = Player('White', {'A': Worker('A', self.board,
-                                                         'White', (3, 1)),
+        self.player_white = Player('white', {'A': Worker('A', self.board,
+                                                         'white', (3, 1)),
                                              'B': Worker('B', self.board,
-                                                         'White', (1, 3))})
-        self.player_blue = Player('Blue', {'Y': Worker('Y', self.board,
-                                                       'Blue', (1, 1)),
+                                                         'white', (1, 3))})
+        self.player_blue = Player('blue', {'Y': Worker('Y', self.board,
+                                                       'blue', (1, 1)),
                                            'Z': Worker('Z', self.board,
-                                                       'Blue', (3, 3))})
+                                                       'blue', (3, 3))})
 
         self.curr_player = self.player_white
     
@@ -27,7 +27,10 @@ class Santorini:
         @brief: Takes turns and switches between the two players.
         @return: None
         """
-        self.curr_player = 'Blue' if self.curr_player == 'White' else 'White'
+        if self.curr_player == self.player_white:
+            self.curr_player = self.player_blue
+        else:
+            self.curr_player = self.player_white
     
     def check_win(self):
         """
