@@ -45,29 +45,18 @@ class Santorini:
                     return player.player_id
         return False
     
-    def check_move(self, worker_id, direction):
+    def check_loss(self):
         """
-        @brief: Checks to see if the curr_Player is able to move to surrounding
-                buildings. 
+        @brief: Checks if the current player loses because they're trapped
+        @return: True if the current player loses, False otherwise.
         """
-        curr_worker = self.curr_player.workers[worker_id]
-        try:
-            curr_worker.move(direction)
-            return True
-        except ValueError:
-            return False
-    
-    def check_build(self, worker_id, direction):
-        """
-        @brief: Checks to see if the curr_Player is able to build in surrounding
-                buildings. 
-        """
-        curr_worker = self.curr_player.workers[worker_id]
-        try:
-            curr_worker.build(direction)
-            return True
-        except ValueError:
-            return False
+        valid_dir = ['n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw']
+        for worker in self.curr_player.workers.values():
+            can_move = any(worker.can_move_in_direction(direction) for direction in valid_dir)
+            can_build = any(worker.can_build_in_direction(direction) for direction in valid_dir)
+            if can_move or can_build:
+                return False
+        return True
 
 def main():
     game = Santorini()

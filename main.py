@@ -35,6 +35,15 @@ class SantoriniCLI:
                     print(f"{self.game.check_win()} has won")
                     break
                 
+                # Check for a loss
+                if self.game.check_loss():
+                    self.game.switch_player()
+                    print(f"{self.game.curr_player.player_id} has won")
+                    break
+                
+                # Used to check for invalid directions
+                valid_directions = ['n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw']
+                
                 # Check for invalid worker inputs
                 while True:
                     try:
@@ -44,34 +53,34 @@ class SantoriniCLI:
                                 raise OpponentPiece()
                             else:
                                 raise InvalidWorker()
+                        
+                        if not any(self.game.curr_player.workers[worker_id].can_move_in_direction(direction) for direction in valid_directions):
+                            raise TrappedWorker()
                         break
                     except InvalidWorker:
                         print("Not a valid worker")
                     except OpponentPiece:
                         print("That is not your worker")
-                
-                # Used to check for invalid directions
-                valid_directions = ['n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw']
+                    except TrappedWorker:
+                        print("That worker cannot move")
                 
                 # Check invalid moves
                 while True:
                     try:
-                        move_direction = input("Select a direction to move (n, ne, e, se, s, sw, w, nw):\n")
+                        move_direction = input("Select a direction to move (n, ne, e, se, s, sw, w, nw)\n")
                         if move_direction not in valid_directions:
                             raise InvalidDirError()
                         self.game.curr_player.workers[worker_id].move(move_direction)
                         break
                     except InvalidDirError:
                         print("Not a valid direction")
-                    except TrappedWorker:
-                        print("That worker cannot move")
                     except MoveError as e:
                         print(f"Cannot move {e.direction}")
                 
                 # Check invalid build
                 while True:
                     try:
-                        build_direction = input("Select a direction to build (n, ne, e, se, s, sw, w, nw):\n")
+                        build_direction = input("Select a direction to build (n, ne, e, se, s, sw, w, nw)\n")
                         if build_direction not in valid_directions:
                             raise InvalidDirError()
                         self.game.curr_player.workers[worker_id].build(build_direction)
@@ -91,7 +100,7 @@ class SantoriniCLI:
             self.play_again = again == 'yes'
 
 if __name__ == "__main__":
-
+    # try:
     SantoriniCLI().run()
-
-    logging.error("%s: '%s'", type(e).__name__, str(e))
+    # except Exception as e:
+    # logging.error("%s: '%s'", type(e).__name__, str(e))
