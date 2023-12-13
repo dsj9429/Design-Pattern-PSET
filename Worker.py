@@ -21,6 +21,8 @@ class Worker:
         @return True if the worker can move in the specified direction
         """
         row, col = self.position
+        
+        # Checks if direction is not out of the board and is below level 4
         if direction == 'n' and row - 1 > -1:
             return not self.board.is_position_occupied((row - 1, col)) and self.board.get_building_level(row - 1, col) < 4
         elif direction == 'ne' and row - 1 > -1 and col + 1 < 5:
@@ -49,6 +51,7 @@ class Worker:
         row, col = self.position
         target_position = None
 
+        # Checks if direction is not out of the board and is below level 4
         if direction == 'n' and row - 1 > -1:
             target_position = (row - 1, col)
         elif direction == 'ne' and row - 1 > -1 and col + 1 < 5:

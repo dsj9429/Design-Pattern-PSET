@@ -8,10 +8,6 @@ class Board:
         """
         self.grid = [[0 for _ in range(5)] for _ in range(5)]
         self.worker_positions = worker_positions
-        self.dome_amt = 18
-        self.level1_amt = 22
-        self.level2_amt = 18
-        self.level3_amt = 14
 
     def get_building_level(self, row, col):
         """
@@ -33,9 +29,11 @@ class Board:
             print("|", end="")
             for col in range(5):
                 if (row, col) in self.worker_positions.values():
+                    # Prints out worker_id for each worker
                     worker_id = [k for k, v in self.worker_positions.items() if v == (row, col)][0]
                     print(f"{self.grid[row][col]}{worker_id}", end="")
                 else:
+                    # Prints out blankspace if there is not a worker here
                     print(f"{self.grid[row][col]}", end=" ")
 
                 print("|", end="")

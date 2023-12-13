@@ -34,13 +34,16 @@ class Santorini:
     
     def check_win(self):
         """
-        @brief Checks if a player has won
+        @brief Checks if a player has won.
         @param None
         @return player_id if they have won, false otherwise
         """
+        # Checks both players
         for player in [self.player_white, self.player_blue]:
+            # Checks all workers of this player
             for worker in player.workers.values():
                 row, col = worker.position
+                # Returns id of player if that player is in a level 3 building
                 if self.board.get_building_level(row, col) == 3:
                     return player.player_id
         return False
@@ -51,6 +54,8 @@ class Santorini:
         @return: True if the current player loses, False otherwise.
         """
         valid_dir = ['n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw']
+        
+        # If worker cannot move or buildin any direction, return false
         for worker in self.curr_player.workers.values():
             can_move = any(worker.can_move_in_direction(direction) for direction in valid_dir)
             can_build = any(worker.can_build_in_direction(direction) for direction in valid_dir)

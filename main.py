@@ -7,7 +7,7 @@ import logging
 from exceptions import *
 
 from santorini import Santorini
-from player import HumanPlayer, RandomPlayer, HeuristicPlayer
+from player import RandomPlayer, HeuristicPlayer
 
 class SantoriniCLI:
     """Driver class for a command-line interface to the Santorini application"""
@@ -33,14 +33,16 @@ class SantoriniCLI:
         @param None
         @return None
         """
+        # As long as client wants to play again, run the program
         while self.play_again:
             self.game = Santorini()
             self.game.turn = 1
 
+            # Runs the game as long as there are no winners or losers
             while True:
                 # Save the state before making a move for undo/redo
                 self.game.curr_player.save_state()
-                    
+
                 self.game.board.display_board()
                 print(f"Turn: {self.game.turn}, {self.game.curr_player.player_id} ({''.join(self.game.curr_player.workers.keys())})")
                 
@@ -56,7 +58,6 @@ class SantoriniCLI:
                     break
                 
                 ##### This block should be in a make_move() for HumanPlayer####
-                
                 # Used to check for invalid directions
                 valid_directions = ['n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw']
                 
@@ -65,11 +66,14 @@ class SantoriniCLI:
                     try:
                         worker_id = input("Select a worker to move\n")
                         if worker_id not in self.game.curr_player.workers.keys():
+                            # If worker is opponent's worker, raise error
                             if any(worker_id in player.workers.keys() for player in [self.game.player_white, self.game.player_blue]):
                                 raise OpponentPiece()
+                            # If worker is not anyone's worker, raise error
                             else:
                                 raise InvalidWorker()
                         
+                        # If all workers of this player can't move, raise error
                         if not any(self.game.curr_player.workers[worker_id].can_move_in_direction(direction) for direction in valid_directions):
                             raise TrappedWorker()
                         break

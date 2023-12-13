@@ -38,17 +38,6 @@ class Player:
             self.turn_stack.append(self.redo_stack.pop())
             self.workers = self.turn_stack[-1]
 
-class HumanPlayer(Player):
-    def make_move(self, worker_id, move_direction, build_direction):
-        """
-        @brief Objects for real players to move and build
-        @param worker_id: ID of the worker to move/build
-        @param move_direction: Direction to move the worker
-        @param build_direction: Direction to build a level
-        @return: None
-        """
-        self.save_state()
-
 class HeuristicPlayer(Player):
     def make_move(self):
         """
@@ -60,10 +49,22 @@ class HeuristicPlayer(Player):
 class RandomPlayer(Player):
     def make_move(self):
         valid_dir = ['n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw']
+        
+        # Chooses a random worker of this player
         worker_id = random.choice(list(self.workers.keys()))
-        move_direction = random.choice(valid_dir)
-        build_direction = random.choice(valid_dir)
 
+        # Keeps choosing move and build direction as long as it's invalid
+        while True:
+            # Choose the move and build direction
+            move_direction = random.choice(valid_dir)
+            build_direction = random.choice(valid_dir)
+
+            # If the move and build is valid, break the loop
+            if (
+                self.workers[worker_id].can_move_in_direction(move_direction)
+                and self.workers[worker_id].can_build_in_direction(build_direction)
+            ):
+                break
         self.save_state()
         self.workers[worker_id].move(move_direction)
         self.workers[worker_id].build(build_direction)
