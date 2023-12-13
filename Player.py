@@ -59,8 +59,13 @@ class HeuristicPlayer(Player):
 
 class RandomPlayer(Player):
     def make_move(self):
-        """
-        @brief Implements the Random moves player
-        @return: None
-        """
+        valid_dir = ['n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw']
+        worker_id = random.choice(list(self.workers.keys()))
+        move_direction = random.choice(valid_dir)
+        build_direction = random.choice(valid_dir)
+
         self.save_state()
+        self.workers[worker_id].move(move_direction)
+        self.workers[worker_id].build(build_direction)
+
+        print(f"{worker_id},{move_direction},{build_direction}")

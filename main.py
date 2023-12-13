@@ -1,17 +1,31 @@
 """Main interface for the Bank application."""
 import sys
+import argparse
 import copy
 import random
 import logging
 from exceptions import *
 
 from santorini import Santorini
+from player import HumanPlayer, RandomPlayer, HeuristicPlayer
 
 class SantoriniCLI:
     """Driver class for a command-line interface to the Santorini application"""
 
-    def __init__(self):
+    def __init__(self, white, blue, undo, score):
         self.play_again = True
+        self.white = white
+        self.blue = blue
+        self.undo = undo
+        self.score = score
+    
+    # def create_player(self, player_type, player_id):
+    #     if player_type == 'human':
+    #         return HumanPlayer(player_id, {})
+    #     elif player_type == 'random':
+    #         return RandomPlayer(player_id, {})
+    #     elif player_type == 'heuristic':
+    #         return RandomPlayer(player_id, {})
 
     def run(self):
         """
@@ -40,6 +54,8 @@ class SantoriniCLI:
                     self.game.switch_player()
                     print(f"{self.game.curr_player.player_id} has won")
                     break
+                
+                ##### This block should be in a make_move() for HumanPlayer####
                 
                 # Used to check for invalid directions
                 valid_directions = ['n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw']
@@ -91,6 +107,8 @@ class SantoriniCLI:
                         print(f"Cannot build {e.direction}")
                 
                 print(f"{worker_id},{move_direction},{build_direction}")
+                
+                ##### This block should be in a make_move() for HumanPlayer####
 
                 # Switch player for the next turn
                 self.game.turn += 1
@@ -98,9 +116,16 @@ class SantoriniCLI:
                     
             again = input("Play again\n")
             self.play_again = again == 'yes'
-
+    
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='Santorini Game')
+    parser.add_argument('white', default='human')
+    parser.add_argument('blue', default='human')
+    parser.add_argument('undo', default='off')
+    parser.add_argument('score', default='off')
+
+    args = parser.parse_args()
     # try:
-    SantoriniCLI().run()
+    SantoriniCLI(args.white, args.blue, args.undo, args.score).run()
     # except Exception as e:
     # logging.error("%s: '%s'", type(e).__name__, str(e))
