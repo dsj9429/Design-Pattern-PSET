@@ -24,35 +24,68 @@ class SantoriniCLI:
             self.game.turn = 1
 
             while True:
+                # Save the state before making a move for undo/redo
+                self.game.curr_player.save_state()
+                    
                 self.game.board.display_board()
                 print(f"Turn: {self.game.turn}, {self.game.curr_player.player_id} ({''.join(self.game.curr_player.workers.keys())})")
                 
-                worker_id = input("Select a worker to move\n")
-                move_direction = input("Select a direction to move (n, ne, e, se, s, sw, w, nw):\n")
-                build_direction = input("Select a direction to build (n, ne, e, se, s, sw, w, nw):\n")
-
-                # Check if the move is a valid move
-                # if self.game.check_move(worker_id, move_direction) and self.game.check_build(worker_id, build_direction):
-                # Save the state before making a move for undo/redo
-                self.game.curr_player.save_state()
-                
-                # Make the move and build
-                self.game.curr_player.workers[worker_id].move(move_direction)
-                self.game.curr_player.workers[worker_id].build(build_direction)
-
                 # Check for a win
                 if self.game.check_win():
-                    self.game.board.display_board()
-                    print(f"{self.game.curr_player} has won")
+                    print(f"{self.game.check_win()} has won")
                     break
+                
+                # Check for invalid worker inputs
+                while True:
+                    try:
+                        worker_id = input("Select a worker to move\n")
+                        if worker_id not in self.game.curr_player.workers.keys():
+                            if any(worker_id in player.workers.keys() for player in [self.game.player_white, self.game.player_blue]):
+                                raise OpponentPiece()
+                            else:
+                                raise InvalidWorker()
+                        break
+                    except InvalidWorker:
+                        print("Not a valid worker")
+                    except OpponentPiece:
+                        print("That is not your worker")
+                
+                # Used to check for invalid directions
+                valid_directions = ['n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw']
+                
+                # Check invalid moves
+                while True:
+                    try:
+                        move_direction = input("Select a direction to move (n, ne, e, se, s, sw, w, nw):\n")
+                        if move_direction not in valid_directions:
+                            raise InvalidDirError()
+                        self.game.curr_player.workers[worker_id].move(move_direction)
+                        break
+                    except InvalidDirError:
+                        print("Not a valid direction")
+                    except TrappedWorker:
+                        print("That worker cannot move")
+                    except MoveError as e:
+                        print(f"Cannot move {e.direction}")
+                
+                # Check invalid build
+                while True:
+                    try:
+                        build_direction = input("Select a direction to build (n, ne, e, se, s, sw, w, nw):\n")
+                        if build_direction not in valid_directions:
+                            raise InvalidDirError()
+                        self.game.curr_player.workers[worker_id].build(build_direction)
+                        break
+                    except InvalidDirError:
+                        print("Not a valid direction")
+                    except BuildError as e:
+                        print(f"Cannot build {e.direction}")
+                
+                print(f"{worker_id},{move_direction},{build_direction}")
 
                 # Switch player for the next turn
                 self.game.turn += 1
                 self.game.switch_player()
-                
-                print(f"{worker_id},{move_direction},{build_direction}\n")
-                # else:
-                #     print("Invalid move. Please try again.\n")
                     
             again = input("Play again\n")
             self.play_again = again == 'yes'

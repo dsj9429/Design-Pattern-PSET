@@ -34,13 +34,15 @@ class Santorini:
     
     def check_win(self):
         """
-        @brief: Checks to see if the the worker for curr players are in a
-                building with 3 levels.
+        @brief Checks if a player has won
+        @param None
+        @return player_id if they have won, false otherwise
         """
-        for worker in self.curr_player.workers.values():
-            row, col = worker.position
-            if self.board.get_building_level(row, col) == 3:
-                return True
+        for player in [self.player_white, self.player_blue]:
+            for worker in player.workers.values():
+                row, col = worker.position
+                if self.board.get_building_level(row, col) == 3:
+                    return player.player_id
         return False
     
     def check_move(self, worker_id, direction):

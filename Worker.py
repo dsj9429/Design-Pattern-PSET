@@ -1,4 +1,5 @@
 from board import Board
+from exceptions import MoveError, BuildError
 
 class Worker:
     def __init__(self, worker_id, board, player, position):
@@ -12,6 +13,32 @@ class Worker:
         self.board = board
         self.player = player
         self.position = position
+    
+    def can_move_in_direction(self, direction):
+        """
+        @brief Checks if the worker can move in a given direction.
+        @param direction: The direction to be checked.
+        @return True if the worker can move in the specified direction
+        """
+        row, col = self.position
+        if direction == 'n' and row - 1 > -1:
+            return not self.board.is_position_occupied((row - 1, col))
+        elif direction == 'ne' and row - 1 > -1 and col + 1 < 5:
+            return not self.board.is_position_occupied((row - 1, col + 1))
+        elif direction == 'e' and col + 1 < 5:
+            return not self.board.is_position_occupied((row, col + 1))
+        elif direction == 'se' and row + 1 < 5 and col + 1 < 5:
+            return not self.board.is_position_occupied((row + 1, col + 1))
+        elif direction == 's' and row + 1 < 5:
+            return not self.board.is_position_occupied((row + 1, col))
+        elif direction == 'sw' and row + 1 < 5 and col - 1 > -1:
+            return not self.board.is_position_occupied((row + 1, col - 1))
+        elif direction == 'w' and col - 1 > -1:
+            return not self.board.is_position_occupied((row, col - 1))
+        elif direction == 'nw' and row - 1 > -1 and col - 1 > -1:
+            return not self.board.is_position_occupied((row - 1, col - 1))
+        else:
+            return False
 
     def move(self, direction):
             """
@@ -21,32 +48,36 @@ class Worker:
             @param new_col representing the column of the new position
             @return None
             """
-            valid_directions = ['n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw']
+            valid_dir = ['n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw']
+            if not any(self.can_move_in_direction(dir) for dir in valid_dir):
+                raise TrappedWorker()
             
-            if direction not in valid_directions:
-                raise ValueError("Not a valid direction")
-
             row, col = self.position
+            new_position = None
             
             if direction == 'n' and row - 1 > -1:
-                self.position = (row - 1, col)
+                new_position = (row - 1, col)
             elif direction == 'ne' and row - 1 > -1 and col + 1 < 5:
-                self.position = (row - 1, col + 1)
+                new_position = (row - 1, col + 1)
             elif direction == 'e' and col + 1 < 5:
-                self.position = (row, col + 1)
+                new_position = (row, col + 1)
             elif direction == 'se' and row + 1 < 5 and col + 1 < 5:
-                self.position = (row + 1, col + 1)
+                new_position = (row + 1, col + 1)
             elif direction == 's' and row + 1 < 5:
-                self.position = (row + 1, col)
+                new_position = (row + 1, col)
             elif direction == 'sw' and row + 1 < 5 and col - 1 > -1:
-                self.position = (row + 1, col - 1)
+                new_position = (row + 1, col - 1)
             elif direction == 'w' and col - 1 > -1:
-                self.position = (row, col - 1)
+                new_position = (row, col - 1)
             elif direction == 'nw' and row - 1 > -1 and col -1 > -1:
-                self.position = (row - 1, col - 1)
+                new_position = (row - 1, col - 1)
             else:
-                raise ValueError(f"Cannot move {direction}")
+                raise MoveError(direction)
             
+            if self.board.is_position_occupied(new_position):
+                raise MoveError(direction)
+            
+            self.position = new_position
             self.board.update_worker_position(self.worker_id, self.position)
 
     def build(self, direction):
@@ -56,28 +87,29 @@ class Worker:
             @param col representing column of the position to the building
             @return None
             """
-            valid_directions = ['n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw']
-            
-            if direction not in valid_directions:
-                raise ValueError("Not a valid direction")
-
             row, col = self.position
-            
+            target_position = None
+
             if direction == 'n' and row - 1 > -1:
-                self.board.grid[row - 1][col] += 1
+                target_position = (row - 1, col)
             elif direction == 'ne' and row - 1 > -1 and col + 1 < 5:
-                self.board.grid[row - 1][col + 1] += 1
+                target_position = (row - 1, col + 1)
             elif direction == 'e' and col + 1 < 5:
-                self.board.grid[row][col + 1] += 1
+                target_position = (row, col + 1)
             elif direction == 'se' and row + 1 < 5 and col + 1 < 5:
-                self.board.grid[row + 1][col + 1] += 1
+                target_position = (row + 1, col + 1)
             elif direction == 's' and row + 1 < 5:
-                self.board.grid[row + 1][col] += 1
+                target_position = (row + 1, col)
             elif direction == 'sw' and row + 1 < 5 and col - 1 > -1:
-                self.board.grid[row + 1][col - 1] += 1
+                target_position = (row + 1, col - 1)
             elif direction == 'w' and col - 1 > -1:
-                self.board.grid[row][col - 1] += 1
+                target_position = (row, col - 1)
             elif direction == 'nw' and row - 1 > -1 and col -1 > -1:
-                self.board.grid[row - 1][col - 1] += 1
+                target_position = (row - 1, col - 1)
             else:
-                raise ValueError(f"Cannot build {direction}")
+                raise BuildError(direction)
+
+            if self.board.is_position_occupied(target_position):
+                raise BuildError(direction)
+
+            self.board.grid[target_position[0]][target_position[1]] += 1

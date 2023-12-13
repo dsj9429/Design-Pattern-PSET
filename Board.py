@@ -50,6 +50,14 @@ class Board:
         @return: None
         """
         self.worker_positions[worker_id] = new_position
+    
+    def is_position_occupied(self, position):
+        """
+        @brief Check if a position on board is occupiede by a worker
+        @param position: The position being checked
+        @return: True if the position is occupied, false otherwise
+        """
+        return position in self.worker_positions.values()
             
 def main():  
     game_board = Board()
