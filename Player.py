@@ -1,3 +1,5 @@
+import random
+
 from worker import Worker
 
 class Player:
@@ -13,12 +15,12 @@ class Player:
         self.turn_stack = []
         self.redo_stack = []
 
-    def save_state(self):
-        """
-        @brief Saves the current state to the turn stack.
-        @return: None
-        """
-        self.turn_stack.append(self.workers.copy())
+    # def save_state(self):
+    #     """
+    #     @brief Saves the current state to the turn stack.
+    #     @return: None
+    #     """
+    #     self.turn_stack.append(self.workers.copy())
     
     def undo(self):
         """
@@ -38,20 +40,29 @@ class Player:
             self.turn_stack.append(self.redo_stack.pop())
             self.workers = self.turn_stack[-1]
 
+class HumanPlayer(Player):
+    def make_move(self):
+        """
+        @brief Implement human player
+        @return: None
+        """
+        # self.save_state()
+
 class HeuristicPlayer(Player):
     def make_move(self):
         """
         @brief Implements the heuristic player
         @return: None
         """
-        self.save_state()
+        # self.save_state()
 
 class RandomPlayer(Player):
     def make_move(self):
         valid_dir = ['n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw']
+        workers = self.workers
         
         # Chooses a random worker of this player
-        worker_id = random.choice(list(self.workers.keys()))
+        worker_id = random.choice(list(workers.keys()))
 
         # Keeps choosing move and build direction as long as it's invalid
         while True:
@@ -61,12 +72,12 @@ class RandomPlayer(Player):
 
             # If the move and build is valid, break the loop
             if (
-                self.workers[worker_id].can_move_in_direction(move_direction)
-                and self.workers[worker_id].can_build_in_direction(build_direction)
+                workers[worker_id].can_move_in_direction(move_direction)
+                and workers[worker_id].can_build_in_direction(build_direction)
             ):
                 break
-        self.save_state()
-        self.workers[worker_id].move(move_direction)
-        self.workers[worker_id].build(build_direction)
+        # self.save_state()
+        workers[worker_id].move(move_direction)
+        workers[worker_id].build(build_direction)
 
         print(f"{worker_id},{move_direction},{build_direction}")

@@ -1,6 +1,7 @@
 from board import Board
 from player import Player
 from worker import Worker
+from exceptions import *
 
 class Santorini:
     def __init__(self):
@@ -57,15 +58,67 @@ class Santorini:
         
         # If worker cannot move or buildin any direction, return false
         for worker in self.curr_player.workers.values():
-            can_move = any(worker.can_move_in_direction(direction) for direction in valid_dir)
-            can_build = any(worker.can_build_in_direction(direction) for direction in valid_dir)
+            can_move = any(worker.can_move_in_direction(direction)
+                           for direction in valid_dir)
+            can_build = any(worker.can_build_in_direction(direction)
+                            for direction in valid_dir)
             if can_move or can_build:
                 return False
         return True
 
-def main():
-    game = Santorini()
-    game.board.display_board()
+    def check_worker(self, worker_id, valid_directions):
+        try:
+            if worker_id not in self.curr_player.workers.keys():
+                # If worker is opponent's worker, raise error
+                if any(worker_id in player.workers.keys()
+                       for player in [self.player_white, self.player_blue]):
+                    raise OpponentPiece()
+                # If worker is not anyone's worker, raise error
+                else:
+                    raise InvalidWorker()
+            
+            # If all workers of this player can't move, raise error
+            if not any(self.curr_player.workers[worker_id].can_move_in_direction(direction)
+                       for direction in valid_directions):
+                raise TrappedWorker()
+            return True
+        except InvalidWorker:
+            print("Not a valid worker")
+            return False
+        except OpponentPiece:
+            print("That is not your worker")
+            return False
+        except TrappedWorker:
+            print("That worker cannot move")
+            return False
+    
+    def check_build(self, worker_id, build_direction, valid_directions):
+        """
+        @brief: Checks if player can build in that direction
+        @param build_direction: The direction to be checked
+        @return: True if there is no error in the build
+        """
+        try:
+            if build_direction not in valid_directions:
+                raise InvalidDirError()
+            self.curr_player.workers[worker_id].build(build_direction)
+            return True
+        except InvalidDirError:
+            print("Not a valid direction")
+            return False
+        except BuildError as e:
+            print(f"Cannot build {e.direction}")
+            return False
 
-if __name__ == "__main__":
-    main()
+    def check_move(self, worker_id, move_direction, valid_directions):
+        try:
+            if move_direction not in valid_directions:
+                raise InvalidDirError()
+            self.curr_player.workers[worker_id].move(move_direction)
+            return True
+        except InvalidDirError:
+            print("Not a valid direction")
+            return False
+        except MoveError as e:
+            print(f"Cannot move {e.direction}")
+            return False

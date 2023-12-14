@@ -56,10 +56,3 @@ class Board:
         @return: True if the position is occupied, false otherwise
         """
         return position in self.worker_positions.values()
-            
-def main():  
-    game_board = Board()
-    game_board.display_board()
-
-if __name__ == "__main__":
-    main()
