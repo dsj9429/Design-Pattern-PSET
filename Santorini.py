@@ -22,7 +22,14 @@ class Santorini:
                                                        'blue', (3, 3))})
 
         self.curr_player = self.player_white
-    
+
+    def get_board(self):
+        """
+        @brief: Get the current state of the board
+        @return: The current board
+        """
+        return self.board
+
     def switch_player(self):
         """
         @brief: Takes turns and switches between the two players.

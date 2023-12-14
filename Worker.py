@@ -130,6 +130,7 @@ class Worker:
             row, col = self.position
             target_position = None
 
+            # Checking to see if build direction is a position within the board
             if direction == 'n' and row - 1 > -1:
                 target_position = (row - 1, col)
             elif direction == 'ne' and row - 1 > -1 and col + 1 < 5:
@@ -149,10 +150,13 @@ class Worker:
             else:
                 raise BuildError(direction)
 
+            # Checking to see if position is occupied
             if self.board.is_position_occupied(target_position):
                 raise BuildError(direction)
-            
+
+            # Checking to see if position is already level 4
             if self.board.get_building_level(*target_position) == 4:
                 raise BuildError(direction)
 
+            # Else build at the position
             self.board.grid[target_position[0]][target_position[1]] += 1

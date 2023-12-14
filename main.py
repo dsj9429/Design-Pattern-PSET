@@ -8,6 +8,7 @@ from exceptions import *
 from santorini import Santorini
 from player import HumanPlayer, RandomPlayer, HeuristicPlayer
 from worker import Worker
+from edit import Edit
 
 class SantoriniCLI:
     """Driver class for a command-line interface to the Santorini application"""
@@ -18,6 +19,7 @@ class SantoriniCLI:
         self.blue = blue
         self.undo = undo
         self.score = score
+        self.edit = Edit() if undo == 'on' else None
     
     def create_player(self, player_type, player_id):
         """
@@ -71,6 +73,44 @@ class SantoriniCLI:
                                                 'Z': Worker('Z',
                                                             self.game.board,
                                                             'blue', (3, 3))})
+    def display_turn(self):
+        """
+        @brief: Print's out the turn order, player, their workers, and score
+        @param: None
+        @return: None
+        """
+        turn = self.game.turn
+        id = self.game.curr_player.player_id
+        workers = self.game.curr_player.workers.keys()
+        print(f"Turn: {turn}, {id} ({''.join(workers)})")
+
+    def handle_edit(self):
+        """
+        @brief: Displays the board based on undo/redo/next options
+        @param: None
+        @return: None
+        """
+        if self.edit:
+            while True:
+                user_input = input("undo, redo, or next\n")
+                if user_input == 'undo':
+                    if self.game.turn > 1:
+                        self.game.board = self.edit.undo_move()
+                        self.game.turn -= 1
+                        self.game.switch_player()
+                    self.game.board.display_board()
+                    self.display_turn()
+                elif user_input == 'redo':
+                    if self.game.turn < self.edit._length:
+                        self.game.board = self.edit.redo_move()
+                        self.game.turn += 1
+                        self.game.switch_player()
+                    self.game.board.display_board()
+                    self.display_turn()
+                elif user_input == 'next':
+                    break
+                else:
+                    raise Exception
 
     def human_move(self):
         # Used to check for invalid directions
@@ -122,10 +162,14 @@ class SantoriniCLI:
             # Runs the game as long as there are no winners or losers
             while True:
                 # Save the state before making a move for undo/redo
-                # curr_player.save_state()
+                if self.edit:
+                    self.edit.record_move(self.game)
 
                 self.game.board.display_board()
-                print(f"Turn: {self.game.turn}, {self.game.curr_player.player_id} ({''.join(self.game.curr_player.workers.keys())})")
+                self.display_turn()
+
+                # Shows edit options
+                self.handle_edit()
 
                 # Check for a win
                 if self.game.check_win():

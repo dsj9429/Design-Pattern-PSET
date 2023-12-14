@@ -64,20 +64,28 @@ class RandomPlayer(Player):
         # Chooses a random worker of this player
         worker_id = random.choice(list(workers.keys()))
 
+        move_direction = None
+        build_direction = None
+
         # Keeps choosing move and build direction as long as it's invalid
         while True:
             # Choose the move and build direction
             move_direction = random.choice(valid_dir)
-            build_direction = random.choice(valid_dir)
 
             # If the move and build is valid, break the loop
-            if (
+            try:
                 workers[worker_id].can_move_in_direction(move_direction)
-                and workers[worker_id].can_build_in_direction(build_direction)
-            ):
-                break
-        # self.save_state()
-        workers[worker_id].move(move_direction)
-        workers[worker_id].build(build_direction)
+                workers[worker_id].move(move_direction)
+
+                build_direction = random.choice(valid_dir)
+
+                try:
+                    workers[worker_id].can_build_in_direction(build_direction)
+                    workers[worker_id].build(build_direction)
+                    break
+                except Exception:
+                    pass
+            except Exception:
+                pass
 
         print(f"{worker_id},{move_direction},{build_direction}")
