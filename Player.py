@@ -64,7 +64,7 @@ class Player:
                      score_flag, opponent_workers):
         score = self.calculate_score(opponent_workers)
 
-        if score_flag:
+        if score_flag == 'on':
             print(f"{worker_id},{move_direction},{build_direction} {score}")
         else:
             print(f"{worker_id},{move_direction},{build_direction}")
@@ -93,6 +93,25 @@ class HeuristicPlayer(Player):
 
         return available_moves
 
+    def restore_board(self, worker_id, move_direction):
+        if move_direction == 'n':
+            self.workers[worker_id].move('s')
+        elif move_direction == 'ne':
+            self.workers[worker_id].move('sw')
+        elif move_direction == 'e':
+            self.workers[worker_id].move('w')
+        elif move_direction == 'se':
+            self.workers[worker_id].move('nw')
+        elif move_direction == 's':
+            self.workers[worker_id].move('n')
+        elif move_direction == 'sw':
+            self.workers[worker_id].move('ne')
+        elif move_direction == 'w':
+            self.workers[worker_id].move('e')
+        elif move_direction == 'nw':
+            self.workers[worker_id].move('se')
+        
+
     def make_move(self, score_flag, opponent_workers):
         """
         @brief Implements the heuristic player move maker
@@ -113,19 +132,29 @@ class HeuristicPlayer(Player):
             if not self.workers[worker_id].can_move_in_direction(move_direction):
                 continue
 
-            # Calculate move scores for each move
-            c1, c2, c3 = 3, 2, 1
-            height, center, distance = self.calculate_score(opponent_workers)
-            move_score = c1 * height + c2 * center + c3 * distance
+            # Make the move
+            try:
+                self.workers[worker_id].move(move_direction)
 
-            # Update the best possible move
-            if move_score > best_score:
-                best_move = move
-                best_score = move_score
+                # Calculate move scores for each move
+                c1, c2, c3 = 3, 2, 1
+                height, center, distance = self.calculate_score(opponent_workers)
+                move_score = c1 * height + c2 * center + c3 * distance
+
+                # Update the best possible move
+                if move_score > best_score:
+                    best_move = move
+                    best_score = move_score
+
+                # Revert the move
+                self.restore_board(worker_id, move_direction)
+            except Exception as e:
+                pass
 
         if best_move:
             worker_id, move_direction = best_move
-        
+
+            # Make the best move
             try:
                 self.workers[worker_id].move(move_direction)
             except Exception as e:

@@ -77,3 +77,4 @@ class Board:
         row1, col1 = position1
         row2, col2 = position2
         return abs(row1 - row2) + abs(col1 - col2)
+    
