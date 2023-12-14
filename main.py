@@ -1,7 +1,5 @@
 """Main interface for the Bank application."""
-import sys
 import argparse
-import copy
 import logging
 from exceptions import *
 
@@ -73,6 +71,18 @@ class SantoriniCLI:
                                                 'Z': Worker('Z',
                                                             self.game.board,
                                                             'blue', (3, 3))})
+
+    def get_opponent_workers(self):
+        """
+        @brief: Returns the workers for the opponent players
+        @param: None
+        @return: Workers for opponent player
+        """
+        if self.game.curr_player == self.game.player_white:
+            return self.game.player_blue.workers.values()
+        else:
+            return self.game.player_white.workers.values()
+
     def display_turn(self):
         """
         @brief: Print's out the turn order, player, their workers, and score
@@ -81,8 +91,15 @@ class SantoriniCLI:
         """
         turn = self.game.turn
         id = self.game.curr_player.player_id
-        workers = self.game.curr_player.workers.keys()
-        print(f"Turn: {turn}, {id} ({''.join(workers)})")
+        workers = list(self.game.curr_player.workers.keys())
+
+        opponent_workers = self.get_opponent_workers()
+
+        score = self.game.curr_player.calculate_score(opponent_workers)
+        if self.score == 'on':
+            print(f"Turn: {turn}, {id} ({''.join(workers)}), {score}")
+        else:
+            print(f"Turn: {turn}, {id} ({''.join(workers)})")
 
     def handle_edit(self):
         """
@@ -138,8 +155,14 @@ class SantoriniCLI:
                                       build_direction,
                                       valid_directions)):
                 break
+
+        opponent_workers = self.get_opponent_workers()
         
-        print(f"{worker_id},{move_direction},{build_direction}")
+        self.game.curr_player.display_move(worker_id,
+                                           move_direction,
+                                           build_direction,
+                                           self.score,
+                                           opponent_workers)
 
     def run(self):
         """
@@ -182,18 +205,17 @@ class SantoriniCLI:
                     print(f"{self.game.curr_player.player_id} has won")
                     break
 
-                if self.game.curr_player == self.game.player_white:
-                    opponent_workers = self.game.player_blue.workers.values()
-                else:
-                    opponent_workers = self.game.player_white.workers.values()
+                opponent_workers = self.get_opponent_workers()
 
                 # Implement move based on player type
                 if isinstance(self.game.curr_player, HumanPlayer):
                     self.human_move()
                 elif isinstance(self.game.curr_player, RandomPlayer):
-                    self.game.curr_player.make_move()
+                    self.game.curr_player.make_move(self.score,
+                                                    opponent_workers)
                 elif isinstance(self.game.curr_player, HeuristicPlayer):
-                    self.game.curr_player.make_move(opponent_workers)
+                    self.game.curr_player.make_move(self.score,
+                                                    opponent_workers)
 
                 # Switch player for the next turn
                 self.game.turn += 1
