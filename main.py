@@ -182,13 +182,18 @@ class SantoriniCLI:
                     print(f"{self.game.curr_player.player_id} has won")
                     break
 
+                if self.game.curr_player == self.game.player_white:
+                    opponent_workers = self.game.player_blue.workers.values()
+                else:
+                    opponent_workers = self.game.player_white.workers.values()
+
                 # Implement move based on player type
                 if isinstance(self.game.curr_player, HumanPlayer):
                     self.human_move()
                 elif isinstance(self.game.curr_player, RandomPlayer):
                     self.game.curr_player.make_move()
                 elif isinstance(self.game.curr_player, HeuristicPlayer):
-                    self.game.curr_player.make_move()
+                    self.game.curr_player.make_move(opponent_workers)
 
                 # Switch player for the next turn
                 self.game.turn += 1

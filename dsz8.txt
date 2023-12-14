@@ -1,0 +1,13 @@
+The assignment was a challenge in terms of the time commitment compared to
+previous assignments, but I absolutely enjoyed figuring out the nooks and
+crannies of factoring in the logic of the game. My appreciation for UML diagrams
+have skyrocketed as this was the first time in this class that we did not have a
+predesigned structure or layout of the code given to us. The UML class diagram
+helped me to have a deeper understanding of the relationships between various
+objects within a software engineering project and made me reconsider my ideas of
+correlation, causation, ownership and identity in the context of object-oriented
+design principles. Peer programming was also interesting; task delegation seemed
+straightforward initially, but we were quick to realize that there were parts of
+code that we did not understand due to a dynamically shifting understanding of
+the classes themselves. It made me value communication with my partner
+significantly and increased my appreciation for Git for robust version control. 

@@ -56,3 +56,24 @@ class Board:
         @return: True if the position is occupied, false otherwise
         """
         return position in self.worker_positions.values()
+
+    def get_height(self, position):
+        """
+        @brief Obtains the height of the given cell
+        @param row: The row of the cell
+        @param col: The column of the cell
+        @return: The height of the cell
+        """
+        row, col = position
+        return self.grid[row][col]
+
+    def get_distance(self, position1, position2):
+        """
+        @brief Calculates the Manhattan distance between two positions on the board
+        @param position1: The first position (row, col)
+        @param position2: The second position (row, col)
+        @return: The Manhattan distance between the two positions
+        """
+        row1, col1 = position1
+        row2, col2 = position2
+        return abs(row1 - row2) + abs(col1 - col2)

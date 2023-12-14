@@ -1,0 +1,12 @@
+I have never designed a CLI-game before this assignment, so it was truly a novel
+puzzle to solve; trying to code in the various rules and restrictions of the
+game in a modular, compartmentalized manner was a surprisingly arduous task. It
+was interesting to see how our UML diagram changed from the initial diagram we
+had constructed to the final one we settled on after working on the problem set.
+I realized that peer programming can often lead to messy code once we merge and
+combine our efforts, but if we communicate effectively and let each other know
+at all times what files we’re working on and when to push and pull via Git,
+version control becomes an easy fix. It also made me appreciate comments on code
+significantly as sometimes, due to a narrow timeframe, it was not always
+possible to read through every single line and it was easy to simply know the
+purpose of various methods and to utilize them as necessary. 

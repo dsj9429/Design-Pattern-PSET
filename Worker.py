@@ -77,6 +77,22 @@ class Worker:
             and self.board.get_building_level(*target_position) < 4
         )
 
+    def get_possible_moves(self):
+        """
+        @brief Get a list of possible moves for the worker
+        @return: A list of possible moves (directions) for the worker
+        """
+        valid_dir = ['n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw']
+        return [dir for dir in valid_dir if self.can_move_in_direction(dir)]
+
+    def get_possible_builds(self):
+        """
+        @brief Get a list of possible build directions for the worker
+        @return: A list of possible build directions for the worker
+        """
+        valid_dir = ['n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw']
+        return [dir for dir in valid_dir if self.can_build_in_direction(dir)]
+
     def move(self, direction):
             """
             @brief Moves specified worker according to Santorini rules
