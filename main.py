@@ -113,7 +113,7 @@ class SantoriniCLI:
                 if user_input == 'undo':
                     if self.game.turn > 1:
                         board, worker_positions = self.edit.undo_move()
-                        self.game.board = board
+                        self.game.set_board(board)
                         self.game.set_worker_positions(worker_positions)
                         self.game.turn -= 1
                         self.game.switch_player()
@@ -122,13 +122,14 @@ class SantoriniCLI:
                 elif user_input == 'redo':
                     if self.game.turn < self.edit._length:
                         board, worker_positions = self.edit.redo_move()
-                        self.game.board = board
+                        self.game.set_board(board)
                         self.game.set_worker_positions(worker_positions)
                         self.game.turn += 1
                         self.game.switch_player()
                     self.game.board.display_board()
                     self.display_turn()
                 elif user_input == 'next':
+                    self.edit.next_move()
                     break
                 else:
                     raise Exception
@@ -208,7 +209,7 @@ class SantoriniCLI:
                     self.game.switch_player()
                     print(f"{self.game.curr_player.player_id} has won")
                     break
-
+                # print("undoed", self.game.board)
                 opponent_workers = self.get_opponent_workers()
 
                 # Implement move based on player type
@@ -236,7 +237,7 @@ if __name__ == "__main__":
     parser.add_argument('score', nargs='?', default='off')
 
     args = parser.parse_args()
-    # try:
-    SantoriniCLI(args.white, args.blue, args.undo, args.score).run()
-    # except Exception as e:
-    # logging.error("%s: '%s'", type(e).__name__, str(e))
+    try:
+        SantoriniCLI(args.white, args.blue, args.undo, args.score).run()
+    except Exception as e:
+        logging.error("%s: '%s'", type(e).__name__, str(e))

@@ -204,3 +204,11 @@ class Worker:
         """
         self.position = new_position
         self.board.update_worker_position(self.worker_id, self.position)
+    
+    def set_board(self, board):
+        """
+        @brief: Sets the board of the worker to the specified board.
+        @param board: A Board object representing the new board.
+        @return: None
+        """
+        self.board = board

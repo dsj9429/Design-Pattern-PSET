@@ -7,11 +7,11 @@ class Santorini:
     def __init__(self):
         """
         @brief: Initializes the Santorini game.
-        """        
+        """
         initial_positions = {'A': (3, 1), 'B': (1, 3), 'Y': (1, 1), 'Z': (3, 3)}
 
         self.board = Board(initial_positions)
-        
+
         self.player_white = Player('white', {'A': Worker('A', self.board,
                                                          'white', (3, 1)),
                                              'B': Worker('B', self.board,
@@ -74,6 +74,12 @@ class Santorini:
         return True
 
     def check_worker(self, worker_id, valid_directions):
+        """
+        @brief: Check if worker is valid worker
+        @param worker_id: worker to be checked
+        @param valid_directions: list of valid directions
+        @return: True if worker is valid, false otherwise
+        """
         try:
             if worker_id not in self.curr_player.workers.keys():
                 # If worker is opponent's worker, raise error
@@ -103,6 +109,7 @@ class Santorini:
         """
         @brief: Checks if player can build in that direction
         @param build_direction: The direction to be checked
+        @param valid_directions: List of valid directions
         @return: True if there is no error in the build
         """
         try:
@@ -118,6 +125,12 @@ class Santorini:
             return False
 
     def check_move(self, worker_id, move_direction, valid_directions):
+        """
+        @brief: Checks if player can move in that direction
+        @param move_direction: The direction to be moved
+        @param valid_directions: List of valid directions
+        @return: True if there is no error in the build
+        """
         try:
             if move_direction not in valid_directions:
                 raise InvalidDirError()
@@ -151,3 +164,14 @@ class Santorini:
         for worker_id, worker in self.curr_player.workers.items():
             worker_positions[worker_id] = worker.position
         return worker_positions
+    
+    def set_board(self, board):
+        """
+        @brief: Set the board to a new board.
+        @param board: The new board.
+        @return: None
+        """
+        self.board = board
+        self.player_blue.set_board(board)
+        self.player_white.set_board(board)
+        

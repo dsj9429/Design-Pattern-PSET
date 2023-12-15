@@ -24,6 +24,11 @@ class Player:
         return height_score
 
     def calculate_distance_score(self, board, opponent_workers):
+        """
+        @brief Calculates distances between player workers
+        @param board: Current board of the game
+        @return: An integer for the distance_score
+        """
         distance_score = 8 - sum(
             min(board.get_distance(worker.position, opponent.position)
                 for worker in self.workers.values())
@@ -32,6 +37,11 @@ class Player:
         return distance_score
 
     def calculate_center_score(self):
+        """
+        @brief Calculates center score for workers
+        @param board: Current board of the game
+        @return: An integer for the center_score
+        """
         center_values = {
             (0, 0): 0, (0, 1): 0, (0, 2): 0, (0, 3): 0, (0, 4): 0,
             (1, 0): 0, (1, 1): 1, (1, 2): 1, (1, 3): 1, (1, 4): 0,
@@ -62,12 +72,30 @@ class Player:
 
     def display_move(self, worker_id, move_direction, build_direction,
                      score_flag, opponent_workers):
+        """
+        @brief: Displays the move after a move and build
+        @param worker_id: worker_id of the worker to be moved
+        @param move_direction: direction to be moved
+        @param build_direction: direction to build
+        @param score_flag: boolean indicating if score should be shown
+        @param opponent_workers: opponent player's workers
+        @return: None
+        """
         score = self.calculate_score(opponent_workers)
 
         if score_flag == 'on':
             print(f"{worker_id},{move_direction},{build_direction} {score}")
         else:
             print(f"{worker_id},{move_direction},{build_direction}")
+    
+    def set_board(self, board):
+        """
+        @brief: Sets the board for the game
+        @param board: Board to be set
+        @return: None
+        """
+        for worker in self.workers.values():
+            worker.set_board(board)
 
 class HumanPlayer(Player):
     def make_move(self):
@@ -94,6 +122,12 @@ class HeuristicPlayer(Player):
         return available_moves
 
     def restore_board(self, worker_id, move_direction):
+        """
+        @brief: Undo a player's move
+        @param worker_id: worker to be reset
+        @param move_direction: Direction of move to be reset
+        @return: None
+        """
         if move_direction == 'n':
             self.workers[worker_id].move('s')
         elif move_direction == 'ne':
