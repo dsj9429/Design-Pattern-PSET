@@ -112,14 +112,18 @@ class SantoriniCLI:
                 user_input = input("undo, redo, or next\n")
                 if user_input == 'undo':
                     if self.game.turn > 1:
-                        self.game.board = self.edit.undo_move()
+                        board, worker_positions = self.edit.undo_move()
+                        self.game.board = board
+                        self.game.set_worker_positions(worker_positions)
                         self.game.turn -= 1
                         self.game.switch_player()
                     self.game.board.display_board()
                     self.display_turn()
                 elif user_input == 'redo':
                     if self.game.turn < self.edit._length:
-                        self.game.board = self.edit.redo_move()
+                        board, worker_positions = self.edit.redo_move()
+                        self.game.board = board
+                        self.game.set_worker_positions(worker_positions)
                         self.game.turn += 1
                         self.game.switch_player()
                     self.game.board.display_board()

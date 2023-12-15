@@ -25,28 +25,28 @@ class Worker:
         # Checks if direction is not out of the board and is below level 4
         if direction == 'n' and row - 1 > -1:
             target_level = self.board.get_building_level(row - 1, col)
-            return not self.board.is_position_occupied((row - 1, col)) and self.board.get_building_level(row - 1, col) < 4 and 0 <= target_level < self.board.grid[row][col] + 1
+            return (not self.board.is_position_occupied((row - 1, col))) and self.board.get_building_level(row - 1, col) < 4 and target_level <= self.board.get_building_level(row, col) + 1
         elif direction == 'ne' and row - 1 > -1 and col + 1 < 5:
             target_level = self.board.get_building_level(row - 1, col + 1)
-            return not self.board.is_position_occupied((row - 1, col + 1)) and self.board.get_building_level(row - 1, col + 1) < 4 and 0 <= target_level < self.board.grid[row][col] + 1
+            return (not self.board.is_position_occupied((row - 1, col + 1))) and self.board.get_building_level(row - 1, col + 1) < 4 and target_level <= self.board.get_building_level(row, col) + 1
         elif direction == 'e' and col + 1 < 5:
             target_level = self.board.get_building_level(row, col + 1)
-            return not self.board.is_position_occupied((row, col + 1)) and self.board.get_building_level(row, col + 1) < 4 and 0 <= target_level < self.board.grid[row][col] + 1
+            return (not self.board.is_position_occupied((row, col + 1))) and self.board.get_building_level(row, col + 1) < 4 and target_level <= self.board.get_building_level(row, col) + 1
         elif direction == 'se' and row + 1 < 5 and col + 1 < 5:
             target_level = self.board.get_building_level(row + 1, col + 1)
-            return not self.board.is_position_occupied((row + 1, col + 1)) and self.board.get_building_level(row + 1, col + 1) < 4 and 0 <= target_level < self.board.grid[row][col] + 1
+            return (not self.board.is_position_occupied((row + 1, col + 1))) and self.board.get_building_level(row + 1, col + 1) < 4 and target_level <= self.board.get_building_level(row, col) + 1
         elif direction == 's' and row + 1 < 5:
             target_level = self.board.get_building_level(row + 1, col)
-            return not self.board.is_position_occupied((row + 1, col)) and self.board.get_building_level(row + 1, col) < 4 and 0 <= target_level < self.board.grid[row][col] + 1
+            return (not self.board.is_position_occupied((row + 1, col))) and self.board.get_building_level(row + 1, col) < 4 and target_level <= self.board.get_building_level(row, col) + 1
         elif direction == 'sw' and row + 1 < 5 and col - 1 > -1:
             target_level = self.board.get_building_level(row + 1, col - 1)
-            return not self.board.is_position_occupied((row + 1, col - 1)) and self.board.get_building_level(row + 1, col - 1) < 4 and 0 <= target_level < self.board.grid[row][col] + 1
+            return (not self.board.is_position_occupied((row + 1, col - 1))) and self.board.get_building_level(row + 1, col - 1) < 4 and target_level <= self.board.get_building_level(row, col) + 1
         elif direction == 'w' and col - 1 > -1:
             target_level = self.board.get_building_level(row, col - 1)
-            return not self.board.is_position_occupied((row, col - 1)) and self.board.get_building_level(row, col - 1) < 4 and 0 <= target_level < self.board.grid[row][col] + 1
+            return (not self.board.is_position_occupied((row, col - 1))) and self.board.get_building_level(row, col - 1) < 4 and target_level <= self.board.get_building_level(row, col) + 1
         elif direction == 'nw' and row - 1 > -1 and col - 1 > -1:
             target_level = self.board.get_building_level(row - 1, col - 1)
-            return not self.board.is_position_occupied((row - 1, col - 1)) and self.board.get_building_level(row - 1, col - 1) < 4 and 0 <= target_level < self.board.grid[row][col] + 1
+            return (not self.board.is_position_occupied((row - 1, col - 1))) and self.board.get_building_level(row - 1, col - 1) < 4 and target_level <= self.board.get_building_level(row, col) + 1
         else:
             return False
     
@@ -117,20 +117,28 @@ class Worker:
             new_position = None
             
             if direction == 'n' and row - 1 > -1:
+                target_level = self.board.get_building_level(row - 1, col)
                 new_position = (row - 1, col)
             elif direction == 'ne' and row - 1 > -1 and col + 1 < 5:
+                target_level = self.board.get_building_level(row - 1, col + 1)
                 new_position = (row - 1, col + 1)
             elif direction == 'e' and col + 1 < 5:
+                target_level = self.board.get_building_level(row, col + 1)
                 new_position = (row, col + 1)
             elif direction == 'se' and row + 1 < 5 and col + 1 < 5:
+                target_level = self.board.get_building_level(row + 1, col + 1)
                 new_position = (row + 1, col + 1)
             elif direction == 's' and row + 1 < 5:
+                target_level = self.board.get_building_level(row + 1, col)
                 new_position = (row + 1, col)
             elif direction == 'sw' and row + 1 < 5 and col - 1 > -1:
+                target_level = self.board.get_building_level(row + 1, col - 1)
                 new_position = (row + 1, col - 1)
             elif direction == 'w' and col - 1 > -1:
+                target_level = self.board.get_building_level(row, col - 1)
                 new_position = (row, col - 1)
             elif direction == 'nw' and row - 1 > -1 and col -1 > -1:
+                target_level = self.board.get_building_level(row - 1, col - 1)
                 new_position = (row - 1, col - 1)
             else:
                 raise MoveError(direction)
@@ -139,6 +147,9 @@ class Worker:
                 raise MoveError(direction)
             
             if self.board.get_building_level(*new_position) == 4:
+                raise MoveError(direction)
+            
+            if target_level > self.board.get_building_level(row, col) + 1:
                 raise MoveError(direction)
             
             self.position = new_position
@@ -184,3 +195,12 @@ class Worker:
 
             # Else build at the position
             self.board.grid[target_position[0]][target_position[1]] += 1
+            
+    def set_position(self, new_position):
+        """
+        @brief: Sets the position of the worker to the specified new position.
+        @param new_position: A tuple representing the new position (row, col).
+        @return: None
+        """
+        self.position = new_position
+        self.board.update_worker_position(self.worker_id, self.position)

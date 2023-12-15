@@ -129,3 +129,25 @@ class Santorini:
         except MoveError as e:
             print(f"Cannot move {e.direction}")
             return False
+
+    def set_worker_positions(self, worker_positions):
+        """
+        @brief: Set the positions of the workers on the board.
+        @param worker_positions: Dictionary mapping worker IDs to positions.
+        @return: None
+        """
+        for worker_id, position in worker_positions.items():
+            if worker_id in self.player_blue.workers.keys():
+                self.player_blue.workers[worker_id].set_position(position)
+            if worker_id in self.player_white.workers.keys():
+                self.player_white.workers[worker_id].set_position(position)
+
+    def get_worker_positions(self):
+        """
+        @brief: Get the positions of the workers on the board.
+        @return: Dictionary mapping worker IDs to positions.
+        """
+        worker_positions = {}
+        for worker_id, worker in self.curr_player.workers.items():
+            worker_positions[worker_id] = worker.position
+        return worker_positions
