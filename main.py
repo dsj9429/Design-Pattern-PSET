@@ -221,7 +221,7 @@ class SantoriniCLI:
                 self.game.turn += 1
                 self.game.switch_player()
                     
-            again = input("Play again\n")
+            again = input("Play again?\n")
             self.play_again = again == 'yes'
 
 if __name__ == "__main__":

@@ -26,8 +26,8 @@ class Player:
     def calculate_distance_score(self, board, opponent_workers):
         distance_score = 8 - sum(
             min(board.get_distance(worker.position, opponent.position)
-                for opponent in opponent_workers)
-            for worker in self.workers.values()
+                for worker in self.workers.values())
+            for opponent in opponent_workers
             )
         return distance_score
 

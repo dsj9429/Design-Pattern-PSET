@@ -1,3 +1,5 @@
+import math
+
 class Board:
     def __init__(self, worker_positions):
         """
@@ -69,12 +71,12 @@ class Board:
 
     def get_distance(self, position1, position2):
         """
-        @brief Calculates the Manhattan distance between two positions on the board
+        @brief Calculates the Euclidean distance between two positions on board
         @param position1: The first position (row, col)
         @param position2: The second position (row, col)
-        @return: The Manhattan distance between the two positions
+        @return: The Euclidean distance between the two positions
         """
         row1, col1 = position1
         row2, col2 = position2
-        return abs(row1 - row2) + abs(col1 - col2)
+        return int(math.sqrt((row1 - row2)**2 + (col1 - col2)**2))
     
